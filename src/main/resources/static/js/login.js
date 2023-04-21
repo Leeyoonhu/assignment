@@ -16,9 +16,13 @@ async function login() {
         try {
             fetch(url, option)
                 .then((response) => {
+                    console.log(response.status)
                     if (response.ok) {
                         location.href="/"
-                    } else {
+                    } else if (response.status === 401) {
+                        alert("비밀번호가 맞지 않습니다.")
+                        password.value = ""
+                    } else if (response.status === 404) {
                         alert("존재하지 않는 회원입니다.")
                         id.value = ""
                         password.value = ""

@@ -56,10 +56,16 @@ public class UserController {
     @PostMapping("/login")
     @ResponseBody
     public ResponseEntity login(String id, String password, HttpSession session) {
-        User user = userRepository.findByIdAndPassword(id, password);
-        if (user != null){
-            session.setAttribute("userId", user.getId());
-            return new ResponseEntity<>(user.getCount(), HttpStatus.OK);
+        User user;
+        user = userRepository.findById(id);
+        if (user != null ){
+            user = userRepository.findByIdAndPassword(id, password);
+            if (user != null){
+                session.setAttribute("userId", user.getId());
+                return new ResponseEntity<>(user.getCount(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            }
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND);
     }
