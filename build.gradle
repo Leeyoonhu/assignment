@@ -1,0 +1,57 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '2.7.10'
+	id 'io.spring.dependency-management' version '1.1.0'
+}
+
+jar {
+	enabled = false
+}
+
+war {
+	manifest {
+		attributes 'Spring-Boot-Classes': 'WEB-INF/classes'
+		attributes 'Spring-Boot-Lib': 'WEB-INF/lib/'
+		attributes 'Spring-Boot-Version': '2.7.10'
+		attributes 'Main-Class': 'com.assignment.AssignmentApplication'
+	}
+}
+
+war {
+	archiveName("ROOT.war")
+}
+
+group = 'com'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.slf4j:slf4j-api'
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'javax.xml.bind:jaxb-api'
+	implementation group: 'com.google.code.gson', name: 'gson', version: '2.10'
+	runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
