@@ -36,11 +36,11 @@ public class UserController {
 
     @PostMapping("/join")
     @ResponseBody
-    public ResponseEntity join(String userName, String userId, String password){
-        log.info(userId);
+    public ResponseEntity join(String name, String id, String password){
+        log.info(id);
         User user = new User();
-        user.setName(userName);
-        user.setId(userId);
+        user.setName(name);
+        user.setId(id);
         user.setPassword(password);
         try {
             userRepository.insert(user);
