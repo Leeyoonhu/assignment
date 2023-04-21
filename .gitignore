@@ -39,3 +39,6 @@ out/
 
 # Application Secret Properties
 /src/main/resources/application-secret.properties
+
+# API KEY
+/src/main/resources/static/js/hospital.js

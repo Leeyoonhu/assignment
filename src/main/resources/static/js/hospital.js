@@ -1,3 +1,5 @@
+document.addEventListener("DOMContentLoaded", callHospInfo);
+
 const apiKey = '4jFXJ6t7FNyEQ5xKvZ6OQR19jVuK5Z0%2BC1SWjoJhRVLKIo4ZkyFT5Eox%2BCqB%2BvsKPCwk%2F94qUum0poAaUAH0kQ%3D%3D';
 const pageNo = 1;
 const numOfRows = 10;
@@ -18,3 +20,4 @@ async function callHospInfo() {
             console.error('There was a problem with the fetch operation:', error);
         });
 }
+
