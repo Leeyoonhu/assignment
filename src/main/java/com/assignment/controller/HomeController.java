@@ -27,4 +27,9 @@ public class HomeController {
         return mav;
     }
 
+    @GetMapping("/login")
+    public ModelAndView getLogin(){
+        mav.setViewName("login");
+        return mav;
+    }
 }
