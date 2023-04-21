@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css" integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>메인</title>
 </head>
@@ -28,8 +29,8 @@
         </a>
         <div class="p-3">
             <div class="input-group mb-3">
-                <input id="searchHosp" type="text" class="form-control" placeholder="병원 명 검색(결과 10개씩 페이징)">
-                <button class="btn btn-outline-secondary" type="button">
+                <input id="searchHosp" type="text" class="form-control" placeholder="병원 명 검색">
+                <button onclick="searchHospInfo()" class="btn btn-outline-secondary" type="button">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
                         <path d="M10.42 10.42a1.75 1.75 0 0 1-2.48 0l-3.98-3.98a1.75 1.75 0 0 1 2.48-2.48l3.98 3.98a1.75 1.75 0 0 1 0 2.48z"/>
                         <path d="M11.5 7a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0z"/>

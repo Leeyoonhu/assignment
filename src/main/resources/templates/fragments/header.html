@@ -17,13 +17,16 @@
                 <h4 class="text-white">Contact</h4>
                 <ul th:if="${session.userId eq null}">
                     <li>
-                        <a href="/login" class="text-white">로그인</a>
+                        <a href="/login" class="text-white text-decoration-none">로그인</a>
                     </li>
-                    <li><a href="/join" class="text-white">회원가입</a></li>
+                    <li><a href="/join" class="text-white text-decoration-none">회원가입</a></li>
                 </ul>
                 <ul th:if="${session.userId ne null}">
                     <li>
-                        <a href="/api/v1/users/logout" class="text-white">로그아웃</a>
+                        <a href="/api/v1/users/list" class="text-white text-decoration-none">내 예약리스트</a>
+                    </li>
+                    <li>
+                        <a href="/api/v1/users/logout" class="text-white text-decoration-none">로그아웃</a>
                     </li>
                 </ul>
             </div>
