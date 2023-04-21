@@ -75,6 +75,8 @@ public class UserController {
         session.invalidate();
         return "redirect:/";
     }
+    
+    // 병원 정보 클릭시 앤드포인트
 
 //
 //    @GetMapping("/check")
