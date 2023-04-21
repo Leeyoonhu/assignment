@@ -10,13 +10,13 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private int count;
 
     @Column(length = 100, nullable = false)
-    private String userName;
+    private String name;
 
     @Column(length = 50, nullable = false, unique = true)
-    private String userId;
+    private String id;
 
     @Column(length = 100, nullable = false)
     private String password;

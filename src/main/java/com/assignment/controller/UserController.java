@@ -24,12 +24,13 @@ public class UserController {
 
     @PostMapping("/checkUserId")
     @ResponseBody
-    public String checkUserId(String userId){
-        User user = userRepository.findByUserId(userId);
+    public ResponseEntity checkUserId(@RequestParam("id") String id){
+        log.info(id);
+        User user = userRepository.findById(id);
         if(user != null){
-            return "존재함";
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
         } else {
-            return "존재하지 않음";
+            return new ResponseEntity<>(HttpStatus.OK);
         }
     }
 
@@ -38,8 +39,8 @@ public class UserController {
     public ResponseEntity join(String userName, String userId, String password){
         log.info(userId);
         User user = new User();
-        user.setUserName(userName);
-        user.setUserId(userId);
+        user.setName(userName);
+        user.setId(userId);
         user.setPassword(password);
         try {
             userRepository.insert(user);
