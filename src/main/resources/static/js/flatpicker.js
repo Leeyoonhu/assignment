@@ -8,7 +8,7 @@ let koreanTimezoneOffset = -540;
 let timezoneDiff = koreanTimezoneOffset - timezoneOffset;
 let koreanTime = new Date(now.getTime() + timezoneDiff * 60 * 1000);
 koreanTime.setHours(koreanTime.getHours() + 1);
-
+console.log(koreanTime.getHours());
 for (let i = 0; i < datepickers.length; i++) {
     flatpickr(datepickers[i], {
         minDate: new Date(),
