@@ -33,3 +33,9 @@ async function login() {
         }
     }
 }
+
+document.getElementById('password').addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        login();
+    }
+});

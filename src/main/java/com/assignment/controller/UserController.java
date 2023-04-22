@@ -108,14 +108,9 @@ public class UserController {
         reserve.setSymptom(request.getParameter("symptom"));
         reserve.setDate(request.getParameter("date"));
 
-        @SuppressWarnings("rawtypes")
-        Enumeration e = request.getParameterNames();
-        while (e.hasMoreElements()) {
-            String introduceName = (String) e.nextElement();
-        }
         String imageFilePath = "image";
         String imageFileName = UUID.randomUUID() + uploadFile.getOriginalFilename();
-        log.info("이미지 업로드중..");
+
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(uploadFile.getContentType());
         objectMetaData.setContentLength(uploadFile.getSize());
