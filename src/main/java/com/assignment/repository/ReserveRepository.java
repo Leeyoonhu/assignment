@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ReserveRepository extends JpaRepository<Reserve, Integer> {
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO reserve (yadmNm, hospUrl, addr, telno, clCdNm, name, phoneNo, symptom, uploadFile, date)" +
+    @Query(value = "INSERT INTO reserve (yadmNm, hospUrl, addr, telno, clCdNm, id, name, phoneNo, symptom, uploadFile, date)" +
             " VALUES (:#{#reserve.yadmNm}, :#{#reserve.hospUrl}, :#{#reserve.addr}, :#{#reserve.telno})" +
-            ", :#{#reserve.clCdNm}), :#{#reserve.name}), :#{#reserve.phoneNo}), :#{#reserve.symptom})" +
+            ", :#{#reserve.clCdNm}), :#{#reserve.id}), :#{#reserve.name}), :#{#reserve.phoneNo}), :#{#reserve.symptom})" +
             ", :#{#reserve.uploadFile}), :#{#reserve.date})", nativeQuery = true)
     void insert(Reserve reserve);
 }

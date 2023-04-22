@@ -21,7 +21,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Enumeration;
 import java.util.UUID;
 
@@ -95,14 +97,18 @@ public class UserController {
 
     @PostMapping("/reserve")
     @ResponseBody
-    public ResponseEntity reserve(MultipartHttpServletRequest request, HttpSession session) {
+    public ResponseEntity reserve(MultipartHttpServletRequest request, HttpSession session) throws Exception {
         Reserve reserve = new Reserve();
         MultipartFile uploadFile = request.getFile("uploadFile");
+        log.info("uploadFile.getOriginalFilename() ::::::::::::: " + uploadFile.getOriginalFilename());
+        log.info("uploadFile.getName() ::::::::::::::::: " + uploadFile.getName());
+
         reserve.setYadmNm(request.getParameter("yadmNm"));
         reserve.setHospUrl(request.getParameter("hospUrl"));
         reserve.setAddr(request.getParameter("addr"));
         reserve.setTelno(request.getParameter("telno"));
         reserve.setClCdNm(request.getParameter("clCdNm"));
+        reserve.setId((String)session.getAttribute("userId"));
         reserve.setName(request.getParameter("name"));
         reserve.setPhoneNo(request.getParameter("phoneNo"));
         reserve.setSymptom(request.getParameter("symptom"));
@@ -110,19 +116,15 @@ public class UserController {
 
         String imageFilePath = "image";
         String imageFileName = UUID.randomUUID() + uploadFile.getOriginalFilename();
-
         ObjectMetadata objectMetaData = new ObjectMetadata();
         objectMetaData.setContentType(uploadFile.getContentType());
         objectMetaData.setContentLength(uploadFile.getSize());
         String bucketPath = imageFilePath + "/" + imageFileName;
-        try {
-            amazonS3Client.putObject(
-                    new PutObjectRequest(bucket, bucketPath, uploadFile.getInputStream(), objectMetaData)
-                            .withCannedAcl(CannedAccessControlList.PublicRead)
-            );
-        } catch (IOException ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        amazonS3Client.putObject(
+                new PutObjectRequest(bucket, bucketPath, uploadFile.getInputStream(), objectMetaData)
+                        .withCannedAcl(CannedAccessControlList.PublicRead)
+        );
+        uploadFile.getInputStream().close();
         String urlPath = amazonS3Client.getUrl(bucket, bucketPath).toString();
         reserve.setUploadFile(urlPath);
 
