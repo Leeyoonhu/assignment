@@ -4,11 +4,14 @@ import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.assignment.domain.Reserve;
 import com.assignment.domain.User;
+import com.assignment.repository.ReserveRepository;
 import com.assignment.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.UUID;
 
@@ -29,19 +33,20 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
     AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    @Autowired
+    ReserveRepository reserveRepository;
 
     @PostMapping("/checkUserId")
     @ResponseBody
-    public ResponseEntity checkUserId(String id){
+    public ResponseEntity checkUserId(String id) {
         log.info(id);
         User user = userRepository.findById(id);
-        if(user != null){
+        if (user != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         } else {
             return new ResponseEntity<>(HttpStatus.OK);
@@ -50,7 +55,7 @@ public class UserController {
 
     @PostMapping("/join")
     @ResponseBody
-    public ResponseEntity join(String name, String id, String password){
+    public ResponseEntity join(String name, String id, String password) {
         log.info(id);
         User user = new User();
         user.setName(name);
@@ -70,9 +75,9 @@ public class UserController {
     public ResponseEntity login(String id, String password, HttpSession session) {
         User user;
         user = userRepository.findById(id);
-        if (user != null ){
+        if (user != null) {
             user = userRepository.findByIdAndPassword(id, password);
-            if (user != null){
+            if (user != null) {
                 session.setAttribute("userId", user.getId());
                 return new ResponseEntity<>(user.getCount(), HttpStatus.OK);
             } else {
@@ -83,15 +88,26 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session){
+    public String logout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
     }
 
     @PostMapping("/reserve")
     @ResponseBody
-    public void reserve(MultipartHttpServletRequest request, HttpSession session) throws Exception {
+    public ResponseEntity reserve(MultipartHttpServletRequest request, HttpSession session) {
+        Reserve reserve = new Reserve();
         MultipartFile uploadFile = request.getFile("uploadFile");
+        reserve.setYadmNm(request.getParameter("yadmNm"));
+        reserve.setHospUrl(request.getParameter("hospUrl"));
+        reserve.setAddr(request.getParameter("addr"));
+        reserve.setTelno(request.getParameter("telno"));
+        reserve.setClCdNm(request.getParameter("clCdNm"));
+        reserve.setName(request.getParameter("name"));
+        reserve.setPhoneNo(request.getParameter("phoneNo"));
+        reserve.setSymptom(request.getParameter("symptom"));
+        reserve.setDate(request.getParameter("date"));
+
         @SuppressWarnings("rawtypes")
         Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
@@ -104,12 +120,24 @@ public class UserController {
         objectMetaData.setContentType(uploadFile.getContentType());
         objectMetaData.setContentLength(uploadFile.getSize());
         String bucketPath = imageFilePath + "/" + imageFileName;
-        amazonS3Client.putObject(
-                new PutObjectRequest(bucket, bucketPath, uploadFile.getInputStream(), objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
+        try {
+            amazonS3Client.putObject(
+                    new PutObjectRequest(bucket, bucketPath, uploadFile.getInputStream(), objectMetaData)
+                            .withCannedAcl(CannedAccessControlList.PublicRead)
+            );
+        } catch (IOException ex) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
         String urlPath = amazonS3Client.getUrl(bucket, bucketPath).toString();
-        log.info("urlPath : " + urlPath);
+        reserve.setUploadFile(urlPath);
+
+        try {
+            reserveRepository.insert(reserve);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (DataIntegrityViolationException ex1) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
     }
 
 

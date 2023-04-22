@@ -64,7 +64,7 @@
                     <div class="col-sm-12 mb-2">
                         <label for="image-upload" class="form-label">증상 이미지 업로드</label>
                         <div id="thumbnail"></div>
-                        <input type="file" id="image-upload" class="form-control" accept="image/*" onchange="validateFileType()">
+                        <input type="file" id="image-upload" class="form-control" accept="image/*" onchange="validateFileExtension()">
                     </div>
                 </div>
                 <hr class="my-4">
@@ -76,6 +76,7 @@
 </body>
 <script th:inline="javaScript">
     const hospName = [[${hospName}]];
+    const name = [[${name}]];
 </script>
 <script type="text/javascript" th:src="@{/js/reserve.js}"></script>
 <script type="text/javascript" th:src="@{/js/flatpicker.js}"></script>

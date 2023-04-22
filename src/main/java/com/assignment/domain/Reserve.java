@@ -33,9 +33,6 @@ public class Reserve {
     @Column(length = 100, nullable = false)
     private String phoneNo;
 
-    @Column(length = 100, nullable = false)
-    private String password;
-
     @Column(length = 1000, nullable = false)
     private String symptom;
 
