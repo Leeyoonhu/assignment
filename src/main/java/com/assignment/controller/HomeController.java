@@ -1,6 +1,9 @@
 package com.assignment.controller;
 
+import com.assignment.domain.User;
+import com.assignment.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +20,9 @@ import javax.servlet.http.HttpSession;
 public class HomeController {
 
     ModelAndView mav = new ModelAndView();
+
+    @Autowired
+    UserRepository userRepository;
 
     @GetMapping(value = "/")
     public ModelAndView getMain(){
@@ -37,9 +43,12 @@ public class HomeController {
     }
 
     @GetMapping("/reserve/{hospName}")
-    public ModelAndView getReserve(@PathVariable String hospName){
+    public ModelAndView getReserve(@PathVariable String hospName, HttpSession session){
         mav.setViewName("reserve");
         mav.addObject("hospName", hospName);
+        String userId = (String)session.getAttribute("userId");
+        User user = userRepository.findById(userId);
+        mav.addObject("name", user.getName());
         return mav;
     }
 }
