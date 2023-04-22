@@ -42,3 +42,4 @@ out/
 
 # API KEY
 /src/main/resources/static/js/hospital.js
+/src/main/resources/static/js/reserve.js
