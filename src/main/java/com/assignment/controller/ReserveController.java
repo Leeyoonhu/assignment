@@ -120,7 +120,18 @@ public class ReserveController {
         }
     }
 
-
-
+    @PostMapping("/delete")
+    @ResponseBody
+    public ResponseEntity postDelete(String yadmNm, String lastDate, HttpSession session){
+        Reserve reserve = reserveRepository.findByIdAndYadmNmAndDate((String)session.getAttribute("userId"), yadmNm, lastDate);
+        log.info(reserve.getUploadFile());
+        try {
+            imgDelete(reserve.getUploadFile());
+            reserveRepository.delete(reserve);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (DataIntegrityViolationException ex1) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+    }
 
 }

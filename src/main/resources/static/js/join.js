@@ -16,19 +16,23 @@ id.addEventListener("focusout", async function () {
         method: "post",
         body: formData
     }
-    try {
-        fetch(url, option)
-            .then((response) => {
-                if (response.ok) {
-                    alert("사용 가능한 아이디입니다.")
-                    check = true;
-                } else {
-                    duplicateId()
-                    check = false;
-                }
-            })
-    } catch (err) {
-        console.log(err)
+    if(id.value !== "") {
+        try {
+            fetch(url, option)
+                .then((response) => {
+                    if (response.ok) {
+                        alert("사용 가능한 아이디입니다.")
+                        check = true;
+                    } else {
+                        duplicateId()
+                        check = false;
+                    }
+                })
+        } catch (err) {
+            console.log(err)
+        }
+    } else {
+        alert("아이디를 입력해주세요.")
     }
 })
 
