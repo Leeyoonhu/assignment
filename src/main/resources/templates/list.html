@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css"
+          integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <title>내 예약 리스트</title>
+</head>
+<th:block th:replace="fragments/header :: headerFragment"></th:block>
+<body>
+<div class="d-flex justify-content-center align-items-center vh-100" th:if="${session.userId ne null}">
+    <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary mx-auto" style="width: 520px;">
+        <div class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
+            <svg class="bi pe-none me-2" width="30" height="24">
+                <use xlink:href="#bootstrap"/>
+            </svg>
+            <span class="fs-5 fw-semibold">내 예약 리스트</span>
+        </div>
+        <div id="listScroll" class="list-group list-group-flush border-bottom" style="max-height: 70vh; overflow-y: auto;">
+            <div th:each="reserve : ${reserveList}" th:if="${reserve ne null}">
+                <a href="#" class="list-group-item list-group-item-action py-3 lh-sm"
+                   aria-current="true">
+                    <div class="d-flex w-100 align-items-center justify-content-between">
+                        <strong class="mb-1">[[${reserve.yadmNm}]]</strong>
+                        <small>[[${reserve.date}]]</small>
+                    </div>
+                    <div class="col-10 mb-1 small">[[${reserve.addr}]]</div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.min.js"
+        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</html>

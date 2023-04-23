@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -46,7 +47,7 @@ public class UserController {
 
     @PostMapping("/checkUserId")
     @ResponseBody
-    public ResponseEntity checkUserId(String id) {
+    public ResponseEntity postCheckUserId(String id) {
         log.info(id);
         User user = userRepository.findById(id);
         if (user != null) {
@@ -58,7 +59,7 @@ public class UserController {
 
     @PostMapping("/join")
     @ResponseBody
-    public ResponseEntity join(String name, String id, String password) {
+    public ResponseEntity postJoin(String name, String id, String password) {
         log.info(id);
         User user = new User();
         user.setName(name);
@@ -75,7 +76,7 @@ public class UserController {
 
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity login(String id, String password, HttpSession session) {
+    public ResponseEntity postLogin(String id, String password, HttpSession session) {
         User user;
         user = userRepository.findById(id);
         if (user != null) {
@@ -91,14 +92,14 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(HttpSession session) {
+    public String getLogout(HttpSession session) {
         session.invalidate();
         return "redirect:/";
     }
 
     @PostMapping("/reserve")
     @ResponseBody
-    public ResponseEntity reserve(MultipartHttpServletRequest request, HttpSession session) throws Exception {
+    public ResponseEntity postReserve(MultipartHttpServletRequest request, HttpSession session) throws Exception {
         Reserve reserve = new Reserve();
         MultipartFile uploadFile = request.getFile("uploadFile");
         log.info("uploadFile.getOriginalFilename() ::::::::::::: " + uploadFile.getOriginalFilename());
@@ -136,19 +137,4 @@ public class UserController {
         }
 
     }
-
-
-//
-//    @GetMapping("/check")
-//    public ResponseEntity checkJwt(@CookieValue(value = "token", required = false)String token){
-//        Claims claims = jwtService.getClaims(token);
-//
-//        if(claims != null) {
-//            String userName = claims.get("userName").toString();
-//            return new ResponseEntity<>(userName, HttpStatus.OK);
-//        }
-//
-//        return new ResponseEntity<>(null, HttpStatus.OK);
-//    }
-
 }
