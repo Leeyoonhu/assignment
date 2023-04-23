@@ -106,9 +106,9 @@ public class ReserveController {
         reserve.setSymptom(request.getParameter("symptom"));
         reserve.setDate(request.getParameter("date"));
 
-        // 중복검사
+        // 중복검사 (동일날짜 가능, 다른날짜 예약있을때 불가능..)
         Reserve checkReserve = reserveRepository.findByIdAndYadmNmAndDate((String)session.getAttribute("userId"), request.getParameter("yadmNm"), reserve.getDate());
-        if(checkReserve != null) {
+        if(checkReserve != null && !reserve.getDate().equals(request.getParameter("lastDate"))) {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         } else {
             try {
