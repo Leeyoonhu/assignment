@@ -55,8 +55,8 @@ public class ReserveController {
     }
 
     public void imgDelete(String originPath) {
-        String key = originPath.substring(originPath.lastIndexOf("/") + 1);
-        amazonS3Client.deleteObject(bucket, "image/" + key);
+        String key = "image/" + originPath.substring(originPath.lastIndexOf("/") + 1);
+        amazonS3Client.deleteObject(bucket, key);
     }
 
 
@@ -125,8 +125,8 @@ public class ReserveController {
     public ResponseEntity postDelete(String yadmNm, String lastDate, HttpSession session){
         Reserve reserve = reserveRepository.findByIdAndYadmNmAndDate((String)session.getAttribute("userId"), yadmNm, lastDate);
         log.info(reserve.getUploadFile());
+        imgDelete(reserve.getUploadFile());
         try {
-            imgDelete(reserve.getUploadFile());
             reserveRepository.delete(reserve);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (DataIntegrityViolationException ex1) {
