@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>예약</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/css/bootstrap.min.css"
+          integrity="sha512-SbiR/eusphKoMVVXysTKG/7VseWii+Y3FdHrt0EpKgpToZeemhqHeZeLWLhJutz/2ut2Vw1uQEj2MbRF+TVBUA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+</head>
+<th:block th:replace="fragments/header :: headerFragment"></th:block>
+<body>
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>상세 정보</h2>
+    </div>
+    <div class="py-5 text-center d-flex justify-content-center">
+        <div>
+            <div class="needs-validation" novalidate>
+                <h4 class="mb-3">병원 정보 <a id="hospUrl" class="text-decoration-none">(홈페이지)</a></h4>
+                <div class="row">
+                    <div class="col-sm-6 mb-2">
+                        <label for="yadmNm" class="form-label">병원명</label>
+                        <input type="text" class="form-control" id="yadmNm" readonly th:value="${reserve.yadmNm}">
+                    </div>
+
+                    <div class="col-sm-6 mb-2">
+                        <label for="clCdNm" class="form-label">종별</label>
+                        <input type="text" class="form-control" id="clCdNm" readonly th:value="${reserve.clCdNm}">
+                    </div>
+
+                    <div class="col-sm-6 mb-2">
+                        <label for="addr" class="form-label">주소</label>
+                        <input type="text" class="form-control" id="addr" readonly th:value="${reserve.addr}">
+                    </div>
+
+                    <div class="col-sm-6 mb-2">
+                        <label for="telno" class="form-label">전화번호</label>
+                        <input type="text" class="form-control" id="telno" readonly th:value="${reserve.telno}">
+                    </div>
+                </div>
+
+                <hr class="my-4">
+                <h4 class="mb-3">진료 신청</h4>
+                <div class="row">
+                    <div class="col-sm-6 mb-2">
+                        <label for="name" class="form-label">신청자 성함</label>
+                        <input type="text" class="form-control" id="name" readonly th:value="${reserve.name}">
+                    </div>
+                    <div class="col-sm-6 mb-2">
+                        <label for="phoneNo" class="form-label">신청자 전화번호</label>
+                        <input type="tel" class="form-control" id="phoneNo" placeholder="010-0000-0000"
+                               pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" maxlength="13" th:value="${reserve.phoneNo}">
+                    </div>
+                    <div class="col-sm-12 mb-2">
+                        <label for="datepicker" class="form-label">진료 신청일</label>
+                        <input type="text" name="datepicker" id="datepicker" class="form-control"
+                               placeholder="날짜를 선택하세요" th:value="${reserve.date}">
+                    </div>
+                    <div class="col-sm-12 mb-2">
+                        <label for="symptom" class="form-label">증상 입력</label>
+                        <textarea name="datepicker" id="symptom" class="form-control" style="height: auto; resize: none"
+                                  placeholder="증상을 입력하세요">[[${reserve.symptom}]]</textarea>
+                    </div>
+                    <div class="col-sm-12 mb-2">
+                        <label for="image-upload" class="form-label">증상 이미지 업로드</label>
+                        <div id="thumbnail"></div>
+                        <input type="file" id="image-upload" class="form-control" accept="image/*"
+                               onchange="validateFileExtension()">
+                    </div>
+                </div>
+                <hr class="my-4">
+                <div class="row">
+                    <button class="w-50 btn btn-primary btn-lg col-sm-6" type="submit">수정하기</button>
+                    <button class="w-50 btn btn-primary btn-lg col-sm-6" type="submit">삭제하기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script th:inline="javaScript">
+    const symptomImg = [[${reserve.uploadFile}]];
+</script>
+<script type="text/javascript" th:src="@{/js/reserve.js}"></script>
+<script type="text/javascript" th:src="@{/js/flatpicker.js}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.min.js"
+        integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</html>

@@ -19,4 +19,7 @@ public interface ReserveRepository extends JpaRepository<Reserve, Integer> {
 
     @Query(value = "SELECT * FROM reserve WHERE id = :id ORDER BY date ASC", nativeQuery = true)
     List<Reserve> findById(String id);
+
+    @Query(value = "SELECT * FROM reserve WHERE id = :id AND yadm_nm = :yadmNm AND date = :date", nativeQuery = true)
+    Reserve findByIdAndYadmNmAndDate(String id, String yadmNm, String date);
 }

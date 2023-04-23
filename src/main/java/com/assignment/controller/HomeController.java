@@ -68,4 +68,12 @@ public class HomeController {
         mav.setViewName("list");
         return mav;
     }
+
+    @GetMapping("/modify/{id}/{yadmNm}/{date}")
+    public ModelAndView getModify(@PathVariable String id, @PathVariable String yadmNm, @PathVariable String date) {
+        Reserve reserve = reserveRepository.findByIdAndYadmNmAndDate(id, yadmNm, date);
+        mav.addObject("reserve", reserve);
+        mav.setViewName("modify");
+        return mav;
+    }
 }
