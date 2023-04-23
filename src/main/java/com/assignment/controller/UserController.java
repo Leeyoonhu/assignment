@@ -35,6 +35,7 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
     AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
@@ -113,7 +114,6 @@ public class UserController {
         reserve.setPhoneNo(request.getParameter("phoneNo"));
         reserve.setSymptom(request.getParameter("symptom"));
         reserve.setDate(request.getParameter("date"));
-
         String imageFilePath = "image";
         String imageFileName = UUID.randomUUID() + uploadFile.getOriginalFilename();
         ObjectMetadata objectMetaData = new ObjectMetadata();

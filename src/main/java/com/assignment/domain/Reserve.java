@@ -6,43 +6,43 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "reserve", uniqueConstraints = {@UniqueConstraint(columnNames = {"yadmNm", "date"})})
+@Table(name = "reserve", uniqueConstraints = {@UniqueConstraint(columnNames = {"yadm_nm", "date"})})
 public class Reserve {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int count;
 
-    @Column(length = 200, nullable = false)
+    @Column(name = "yadm_nm", length = 200, nullable = false)
     private String yadmNm;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "hosp_url", length = 100, nullable = false)
     private String hospUrl;
 
-    @Column(length = 300, nullable = false)
+    @Column(name = "addr", length = 300, nullable = false)
     private String addr;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "telno", length = 100, nullable = false)
     private String telno;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "cl_cd_nm", length = 100, nullable = false)
     private String clCdNm;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "id", length = 100, nullable = false)
     private String id;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "phone_no", length = 100, nullable = false)
     private String phoneNo;
 
-    @Column(length = 1000, nullable = false)
+    @Column(name = "symptom", length = 1000, nullable = false)
     private String symptom;
 
-    @Column(length = 200, nullable = false)
+    @Column(name = "upload_file", length = 200, nullable = false)
     private String uploadFile;
 
-    @Column(length = 100, nullable = false)
+    @Column(name = "date", length = 100, nullable = false)
     private String date;
 
 }
