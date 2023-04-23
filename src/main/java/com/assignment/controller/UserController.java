@@ -36,14 +36,7 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    AmazonS3Client amazonS3Client;
 
-    @Value("${cloud.aws.s3.bucket}")
-    private String bucket;
-
-    @Autowired
-    ReserveRepository reserveRepository;
 
     @PostMapping("/checkUserId")
     @ResponseBody
@@ -97,44 +90,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @PostMapping("/reserve")
-    @ResponseBody
-    public ResponseEntity postReserve(MultipartHttpServletRequest request, HttpSession session) throws Exception {
-        Reserve reserve = new Reserve();
-        MultipartFile uploadFile = request.getFile("uploadFile");
-        log.info("uploadFile.getOriginalFilename() ::::::::::::: " + uploadFile.getOriginalFilename());
-        log.info("uploadFile.getName() ::::::::::::::::: " + uploadFile.getName());
 
-        reserve.setYadmNm(request.getParameter("yadmNm"));
-        reserve.setHospUrl(request.getParameter("hospUrl"));
-        reserve.setAddr(request.getParameter("addr"));
-        reserve.setTelno(request.getParameter("telno"));
-        reserve.setClCdNm(request.getParameter("clCdNm"));
-        reserve.setId((String)session.getAttribute("userId"));
-        reserve.setName(request.getParameter("name"));
-        reserve.setPhoneNo(request.getParameter("phoneNo"));
-        reserve.setSymptom(request.getParameter("symptom"));
-        reserve.setDate(request.getParameter("date"));
-        String imageFilePath = "image";
-        String imageFileName = UUID.randomUUID() + uploadFile.getOriginalFilename();
-        ObjectMetadata objectMetaData = new ObjectMetadata();
-        objectMetaData.setContentType(uploadFile.getContentType());
-        objectMetaData.setContentLength(uploadFile.getSize());
-        String bucketPath = imageFilePath + "/" + imageFileName;
-        amazonS3Client.putObject(
-                new PutObjectRequest(bucket, bucketPath, uploadFile.getInputStream(), objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
-        uploadFile.getInputStream().close();
-        String urlPath = amazonS3Client.getUrl(bucket, bucketPath).toString();
-        reserve.setUploadFile(urlPath);
 
-        try {
-            reserveRepository.insert(reserve);
-            return new ResponseEntity<>(HttpStatus.OK);
-        } catch (DataIntegrityViolationException ex1) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT);
-        }
 
-    }
 }

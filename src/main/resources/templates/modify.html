@@ -66,15 +66,15 @@
                     </div>
                     <div class="col-sm-12 mb-2">
                         <label for="image-upload" class="form-label">증상 이미지 업로드</label>
-                        <div id="thumbnail"></div>
+                        <div class="mb-2" id="thumbnail"></div>
                         <input type="file" id="image-upload" class="form-control" accept="image/*"
                                onchange="validateFileExtension()">
                     </div>
                 </div>
                 <hr class="my-4">
                 <div class="row">
-                    <button class="w-50 btn btn-primary btn-lg col-sm-6" type="submit">수정하기</button>
-                    <button class="w-50 btn btn-primary btn-lg col-sm-6" type="submit">삭제하기</button>
+                    <button class="w-50 btn btn-primary btn-lg col-sm-6" onclick="saveReserve()" type="submit">수정하기</button>
+                    <button class="w-50 btn btn-primary btn-lg col-sm-6" onclick="deleteReserve()" type="submit">삭제하기</button>
                 </div>
             </div>
         </div>
@@ -84,7 +84,8 @@
 <script th:inline="javaScript">
     const symptomImg = [[${reserve.uploadFile}]];
 </script>
-<script type="text/javascript" th:src="@{/js/reserve.js}"></script>
+<script type="text/javascript" th:src="@{/js/thumbnail.js}"></script>
+<script type="text/javascript" th:src="@{/js/modify.js}"></script>
 <script type="text/javascript" th:src="@{/js/flatpicker.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.min.js"
         integrity="sha512-1/RvZTcCDEUjY/CypiMz+iqqtaoQfAITmNSJY17Myp4Ms5mdxPS5UV7iOfdZoxcGhzFbOm6sntTKJppjvuhg4g=="

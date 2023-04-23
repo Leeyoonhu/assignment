@@ -68,7 +68,7 @@
                     </div>
                 </div>
                 <hr class="my-4">
-                <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="tryReserve()">예약하기</button>
+                <button class="w-100 btn btn-primary btn-lg" type="submit" onclick="insertReserve()">예약하기</button>
             </div>
         </div>
     </div>
@@ -78,6 +78,7 @@
     const hospName = [[${hospName}]];
     const name = [[${name}]];
 </script>
+<script type="text/javascript" th:src="@{/js/thumbnail.js}"></script>
 <script type="text/javascript" th:src="@{/js/reserve.js}"></script>
 <script type="text/javascript" th:src="@{/js/flatpicker.js}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.2.3/js/bootstrap.min.js"
