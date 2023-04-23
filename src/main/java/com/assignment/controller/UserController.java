@@ -36,8 +36,6 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
-
-
     @PostMapping("/checkUserId")
     @ResponseBody
     public ResponseEntity postCheckUserId(String id) {
