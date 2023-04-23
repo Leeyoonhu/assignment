@@ -29,12 +29,12 @@ async function saveReserve() {
     date = document.getElementById("datepicker").value;
 
     form.append("yadmNm", yadmNm);
-    form.append("id", id);
     form.append("phoneNo", phoneNo);
     form.append("symptom", symptom);
     form.append("date", date);
+    form.append("lastDate", lastDate);
     if(input.files[0] !== undefined) {
-        form.append("uploadFile", imageFile, imageFile.name);
+        form.append("uploadFile", input.files[0], input.files[0].name);
     }
     let option = {
         method: "post",
@@ -63,6 +63,8 @@ function fetchSave(url, option) {
                 window.location.href = "/"
             } else if(response.status === 500) {
                 alert("진료 수정에 실패하였습니다. 다음에 다시 시도해주세요.")
+            } else if(response.status === 409) {
+                alert("동일한 예약 시간이 존재합니다. 다른시간을 선택해주세요")
             }
         })
         .then(data => {

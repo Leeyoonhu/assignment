@@ -29,22 +29,42 @@ import java.util.UUID;
 public class ReserveController {
 
     @Autowired
-    AmazonS3Client amazonS3Client;
+    ReserveRepository reserveRepository;
+
+    MultipartFile uploadFile;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     @Autowired
-    ReserveRepository reserveRepository;
+    AmazonS3Client amazonS3Client;
+
+    public String imgInsert(MultipartFile uploadFile) throws Exception {
+        String imageFilePath = "image";
+        String imageFileName = UUID.randomUUID() + uploadFile.getOriginalFilename();
+        ObjectMetadata objectMetaData = new ObjectMetadata();
+        objectMetaData.setContentType(uploadFile.getContentType());
+        objectMetaData.setContentLength(uploadFile.getSize());
+        String bucketPath = imageFilePath + "/" + imageFileName;
+        amazonS3Client.putObject(
+                new PutObjectRequest(bucket, bucketPath, uploadFile.getInputStream(), objectMetaData)
+                        .withCannedAcl(CannedAccessControlList.PublicRead)
+        );
+        uploadFile.getInputStream().close();
+        return amazonS3Client.getUrl(bucket, bucketPath).toString();
+    }
+
+    public void imgDelete(String originPath) {
+        String key = originPath.substring(originPath.lastIndexOf("/") + 1);
+        amazonS3Client.deleteObject(bucket, "image/" + key);
+    }
 
 
     @PostMapping("/insert")
     @ResponseBody
-    public ResponseEntity postReserve(MultipartHttpServletRequest request, HttpSession session) throws Exception {
+    public ResponseEntity postInsert(MultipartHttpServletRequest request, HttpSession session) throws Exception {
         Reserve reserve = new Reserve();
-        MultipartFile uploadFile = request.getFile("uploadFile");
-        log.info("uploadFile.getOriginalFilename() ::::::::::::: " + uploadFile.getOriginalFilename());
-        log.info("uploadFile.getName() ::::::::::::::::: " + uploadFile.getName());
+        uploadFile = request.getFile("uploadFile");
 
         reserve.setYadmNm(request.getParameter("yadmNm"));
         reserve.setHospUrl(request.getParameter("hospUrl"));
@@ -57,18 +77,7 @@ public class ReserveController {
         reserve.setSymptom(request.getParameter("symptom"));
         reserve.setDate(request.getParameter("date"));
 
-        String imageFilePath = "image";
-        String imageFileName = UUID.randomUUID() + uploadFile.getOriginalFilename();
-        ObjectMetadata objectMetaData = new ObjectMetadata();
-        objectMetaData.setContentType(uploadFile.getContentType());
-        objectMetaData.setContentLength(uploadFile.getSize());
-        String bucketPath = imageFilePath + "/" + imageFileName;
-        amazonS3Client.putObject(
-                new PutObjectRequest(bucket, bucketPath, uploadFile.getInputStream(), objectMetaData)
-                        .withCannedAcl(CannedAccessControlList.PublicRead)
-        );
-        uploadFile.getInputStream().close();
-        String urlPath = amazonS3Client.getUrl(bucket, bucketPath).toString();
+        String urlPath = imgInsert(uploadFile);
         reserve.setUploadFile(urlPath);
 
         try {
@@ -79,6 +88,38 @@ public class ReserveController {
         }
 
     }
+
+    @PostMapping("/save")
+    @ResponseBody
+    public ResponseEntity postSave(MultipartHttpServletRequest request, HttpSession session) throws Exception {
+        Reserve reserve = reserveRepository.findByIdAndYadmNmAndDate((String)session.getAttribute("userId"), request.getParameter("yadmNm"), request.getParameter("lastDate"));
+
+        if(request.getFile("uploadFile") != null){
+            String originPath = reserve.getUploadFile();
+            uploadFile = request.getFile("uploadFile");
+            String urlPath = imgInsert(uploadFile);
+            reserve.setUploadFile(urlPath);
+            imgDelete(originPath);
+        }
+
+        reserve.setPhoneNo(request.getParameter("phoneNo"));
+        reserve.setSymptom(request.getParameter("symptom"));
+        reserve.setDate(request.getParameter("date"));
+
+        // 중복검사
+        Reserve checkReserve = reserveRepository.findByIdAndYadmNmAndDate((String)session.getAttribute("userId"), request.getParameter("yadmNm"), reserve.getDate());
+        if(checkReserve != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        } else {
+            try {
+                reserveRepository.save(reserve);
+                return new ResponseEntity<>(HttpStatus.OK);
+            } catch (DataIntegrityViolationException ex1) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+        }
+    }
+
 
 
 
